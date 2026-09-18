@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Circle - Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+  <main class="container">
+    <h1>Join Circle</h1>
+    <form id="register-form" class="form">
+      <label for="name">Full name</label>
+      <input type="text" id="name" required />
+
+      <label for="username">Username</label>
+      <input type="text" id="username" pattern="[a-zA-Z0-9_]{3,20}" title="3-20 characters: letters, numbers, underscore" required />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" required />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" minlength="6" required />
+
+      <button type="submit" class="btn" style="margin-top:20px; width:100%;">Register</button>
+      <div id="form-message"></div>
+      <p class="muted" style="margin-top:16px;">Already have an account? <a href="login.html">Login</a></p>
+    </form>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/register.js"></script>
+</body>
+</html>
