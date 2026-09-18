@@ -6,24 +6,24 @@ const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 
 const users = [
-  { name: 'Ayesha Khan', username: 'ayesha', email: 'ayesha@example.com', password: 'password123', bio: 'Designer & coffee enthusiast ☕', avatarColor: '#ff7a45' },
-  { name: 'Bilal Ahmed', username: 'bilal', email: 'bilal@example.com', password: 'password123', bio: 'Full-stack developer', avatarColor: '#2f6fed' },
-  { name: 'Sara Malik', username: 'sara', email: 'sara@example.com', password: 'password123', bio: 'Traveler ✈️ | Photographer', avatarColor: '#22c55e' },
+  { name: 'Maria Santos', username: 'maria', email: 'maria@example.com', password: 'password123', bio: 'UX designer & coffee enthusiast ☕', avatarColor: '#ff7a45' },
+  { name: 'David Okafor', username: 'david', email: 'david@example.com', password: 'password123', bio: 'Full-stack developer', avatarColor: '#2f6fed' },
+  { name: 'Priya Nair', username: 'priya', email: 'priya@example.com', password: 'password123', bio: 'Traveler ✈️ | Photographer', avatarColor: '#22c55e' },
 ];
 
 const posts = [
-  { username: 'ayesha', content: 'Just redesigned my portfolio site — feels so good to finally ship it! 🎉' },
-  { username: 'bilal', content: 'Debugging a race condition for 3 hours only to find a missing await. Classic.' },
-  { username: 'sara', content: 'Sunrise over the mountains this morning was unreal. Sometimes you just have to stop and look up.' },
-  { username: 'ayesha', content: 'Coffee shop playlist recommendations? Need something chill for deep work.' },
-  { username: 'bilal', content: 'Shipped a new feature today using WebSockets for the first time — real-time updates are addictive.' },
+  { username: 'maria', content: 'Just redesigned my portfolio site — feels so good to finally ship it! 🎉' },
+  { username: 'david', content: 'Debugging a race condition for 3 hours only to find a missing await. Classic.' },
+  { username: 'priya', content: 'Sunrise over the mountains this morning was unreal. Sometimes you just have to stop and look up.' },
+  { username: 'maria', content: 'Coffee shop playlist recommendations? Need something chill for deep work.' },
+  { username: 'david', content: 'Shipped a new feature today using WebSockets for the first time — real-time updates are addictive.' },
 ];
 
 const comments = [
-  { postIndex: 0, username: 'bilal', text: 'Looks amazing! Love the new layout.' },
-  { postIndex: 0, username: 'sara', text: 'Congrats on shipping! 🎉' },
-  { postIndex: 1, username: 'ayesha', text: 'We\'ve all been there 😂' },
-  { postIndex: 2, username: 'ayesha', text: 'Gorgeous shot!' },
+  { postIndex: 0, username: 'david', text: 'Looks amazing! Love the new layout.' },
+  { postIndex: 0, username: 'priya', text: 'Congrats on shipping! 🎉' },
+  { postIndex: 1, username: 'maria', text: 'We\'ve all been there 😂' },
+  { postIndex: 2, username: 'maria', text: 'Gorgeous shot!' },
 ];
 
 async function run() {
@@ -35,20 +35,20 @@ async function run() {
     createdUsers[u.username] = await User.create(u);
   }
 
-  // ayesha and sara follow bilal; bilal follows ayesha
-  const ayesha = createdUsers.ayesha;
-  const bilal = createdUsers.bilal;
-  const sara = createdUsers.sara;
+  // maria and priya follow david; david follows maria
+  const maria = createdUsers.maria;
+  const david = createdUsers.david;
+  const priya = createdUsers.priya;
 
-  bilal.followers.push(ayesha._id, sara._id);
-  ayesha.following.push(bilal._id);
-  sara.following.push(bilal._id);
-  ayesha.followers.push(bilal._id);
-  bilal.following.push(ayesha._id);
+  david.followers.push(maria._id, priya._id);
+  maria.following.push(david._id);
+  priya.following.push(david._id);
+  maria.followers.push(david._id);
+  david.following.push(maria._id);
 
-  await bilal.save();
-  await ayesha.save();
-  await sara.save();
+  await david.save();
+  await maria.save();
+  await priya.save();
 
   const createdPosts = [];
   for (const p of posts) {
@@ -58,8 +58,8 @@ async function run() {
   }
 
   // A few likes
-  createdPosts[0].likes.push(bilal._id, sara._id);
-  createdPosts[2].likes.push(ayesha._id, bilal._id);
+  createdPosts[0].likes.push(david._id, priya._id);
+  createdPosts[2].likes.push(maria._id, david._id);
   await createdPosts[0].save();
   await createdPosts[2].save();
 
@@ -72,7 +72,7 @@ async function run() {
   }
 
   console.log(`Seeded ${users.length} users, ${posts.length} posts, ${comments.length} comments.`);
-  console.log('Sample login: ayesha@example.com / password123');
+  console.log('Sample login: maria@example.com / password123');
   await mongoose.connection.close();
   process.exit(0);
 }
