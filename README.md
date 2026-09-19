@@ -79,7 +79,7 @@ npm run seed
 ```
 
 Creates 3 sample users (with a follow relationship, some posts, likes and
-comments already in place). Sample login: `maria@example.com` / `password123`.
+comments already in place). Sample login: `hassan@example.com` / `password123`.
 
 ### 5. Run the server
 

@@ -6,24 +6,42 @@ const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 
 const users = [
-  { name: 'Maria Santos', username: 'maria', email: 'maria@example.com', password: 'password123', bio: 'UX designer & coffee enthusiast ☕', avatarColor: '#ff7a45' },
-  { name: 'David Okafor', username: 'david', email: 'david@example.com', password: 'password123', bio: 'Full-stack developer', avatarColor: '#2f6fed' },
-  { name: 'Priya Nair', username: 'priya', email: 'priya@example.com', password: 'password123', bio: 'Traveler ✈️ | Photographer', avatarColor: '#22c55e' },
+  { name: 'Hassan Mohiuddin', username: 'hassan', email: 'hassan@example.com', password: 'password123', bio: 'UX designer & coffee enthusiast ☕', avatarColor: '#ff7a45' },
+  { name: 'Hamza Malik', username: 'hamza', email: 'hamza@example.com', password: 'password123', bio: 'Full-stack developer', avatarColor: '#2f6fed' },
+  { name: 'Kamran', username: 'kamran', email: 'kamran@example.com', password: 'password123', bio: 'Traveler ✈️ | Photographer', avatarColor: '#22c55e' },
+  { name: 'Daniyal Malik', username: 'daniyal', email: 'daniyal@example.com', password: 'password123', bio: 'Music producer 🎧 | Coffee addict', avatarColor: '#8b5cf6' },
+];
+
+// [followerUsername, followingUsername]
+const follows = [
+  ['hassan', 'hamza'],
+  ['hassan', 'daniyal'],
+  ['kamran', 'hamza'],
+  ['daniyal', 'hassan'],
+  ['daniyal', 'hamza'],
 ];
 
 const posts = [
-  { username: 'maria', content: 'Just redesigned my portfolio site — feels so good to finally ship it! 🎉' },
-  { username: 'david', content: 'Debugging a race condition for 3 hours only to find a missing await. Classic.' },
-  { username: 'priya', content: 'Sunrise over the mountains this morning was unreal. Sometimes you just have to stop and look up.' },
-  { username: 'maria', content: 'Coffee shop playlist recommendations? Need something chill for deep work.' },
-  { username: 'david', content: 'Shipped a new feature today using WebSockets for the first time — real-time updates are addictive.' },
+  { username: 'hassan', content: 'Just redesigned my portfolio site — feels so good to finally ship it! 🎉' },
+  { username: 'hamza', content: 'Debugging a race condition for 3 hours only to find a missing await. Classic.' },
+  { username: 'kamran', content: 'Sunrise over the mountains this morning was unreal. Sometimes you just have to stop and look up.' },
+  { username: 'hassan', content: 'Coffee shop playlist recommendations? Need something chill for deep work.' },
+  { username: 'hamza', content: 'Shipped a new feature today using WebSockets for the first time — real-time updates are addictive.' },
+  { username: 'daniyal', content: "Finally mixed down that track I've been working on for weeks 🎧 feedback welcome!" },
 ];
 
 const comments = [
-  { postIndex: 0, username: 'david', text: 'Looks amazing! Love the new layout.' },
-  { postIndex: 0, username: 'priya', text: 'Congrats on shipping! 🎉' },
-  { postIndex: 1, username: 'maria', text: 'We\'ve all been there 😂' },
-  { postIndex: 2, username: 'maria', text: 'Gorgeous shot!' },
+  { postIndex: 0, username: 'hamza', text: 'Looks amazing! Love the new layout.' },
+  { postIndex: 0, username: 'kamran', text: 'Congrats on shipping! 🎉' },
+  { postIndex: 1, username: 'hassan', text: "We've all been there 😂" },
+  { postIndex: 2, username: 'hassan', text: 'Gorgeous shot!' },
+  { postIndex: 5, username: 'hamza', text: 'This slaps! 🔥' },
+];
+
+const likes = [
+  { postIndex: 0, usernames: ['hamza', 'kamran'] },
+  { postIndex: 2, usernames: ['hassan', 'hamza'] },
+  { postIndex: 5, usernames: ['hassan', 'kamran'] },
 ];
 
 async function run() {
@@ -35,20 +53,13 @@ async function run() {
     createdUsers[u.username] = await User.create(u);
   }
 
-  // maria and priya follow david; david follows maria
-  const maria = createdUsers.maria;
-  const david = createdUsers.david;
-  const priya = createdUsers.priya;
-
-  david.followers.push(maria._id, priya._id);
-  maria.following.push(david._id);
-  priya.following.push(david._id);
-  maria.followers.push(david._id);
-  david.following.push(maria._id);
-
-  await david.save();
-  await maria.save();
-  await priya.save();
+  for (const [followerName, followingName] of follows) {
+    const follower = createdUsers[followerName];
+    const following = createdUsers[followingName];
+    following.followers.push(follower._id);
+    follower.following.push(following._id);
+  }
+  await Promise.all(Object.values(createdUsers).map((u) => u.save()));
 
   const createdPosts = [];
   for (const p of posts) {
@@ -57,11 +68,11 @@ async function run() {
     createdPosts.push(post);
   }
 
-  // A few likes
-  createdPosts[0].likes.push(david._id, priya._id);
-  createdPosts[2].likes.push(maria._id, david._id);
-  await createdPosts[0].save();
-  await createdPosts[2].save();
+  for (const like of likes) {
+    const post = createdPosts[like.postIndex];
+    post.likes.push(...like.usernames.map((username) => createdUsers[username]._id));
+    await post.save();
+  }
 
   for (const c of comments) {
     const author = createdUsers[c.username];
@@ -72,7 +83,7 @@ async function run() {
   }
 
   console.log(`Seeded ${users.length} users, ${posts.length} posts, ${comments.length} comments.`);
-  console.log('Sample login: maria@example.com / password123');
+  console.log('Sample login: hassan@example.com / password123');
   await mongoose.connection.close();
   process.exit(0);
 }
