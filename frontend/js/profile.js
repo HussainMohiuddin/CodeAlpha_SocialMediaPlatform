@@ -10,26 +10,29 @@ function renderProfileHeader(profile) {
 
   mount.innerHTML = `
     <div class="profile-header">
-      ${avatarHtml(profile, 'lg')}
-      <div>
-        <h1 style="margin-bottom:2px;">${escapeHtml(profile.name)}</h1>
-        <div class="muted">@${escapeHtml(profile.username)}</div>
-        ${profile.bio ? `<p style="margin:10px 0 0;">${escapeHtml(profile.bio)}</p>` : ''}
-        <div class="profile-stats">
-          <div class="profile-stat"><strong>${profile.followerCount}</strong><span>Followers</span></div>
-          <div class="profile-stat"><strong>${profile.followingCount}</strong><span>Following</span></div>
+      <div class="profile-cover"></div>
+      <div class="profile-header-body">
+        ${avatarHtml(profile, 'lg')}
+        <div>
+          <h1 style="margin-bottom:2px;">${escapeHtml(profile.name)}</h1>
+          <div class="muted">@${escapeHtml(profile.username)}</div>
+          ${profile.bio ? `<p style="margin:10px 0 0;">${escapeHtml(profile.bio)}</p>` : ''}
+          <div class="profile-stats">
+            <div class="profile-stat"><strong>${profile.followerCount}</strong><span>Followers</span></div>
+            <div class="profile-stat"><strong>${profile.followingCount}</strong><span>Following</span></div>
+          </div>
         </div>
-      </div>
-      <div class="profile-actions">
-        ${
-          isOwnProfile
-            ? `<button id="edit-profile-btn" class="btn btn-outline">Edit profile</button>`
-            : currentUser
-              ? `<button id="follow-btn" class="btn ${profile.isFollowing ? 'btn-follow-active' : ''}" data-username="${escapeHtml(profile.username)}">
-                   ${profile.isFollowing ? 'Following' : 'Follow'}
-                 </button>`
-              : `<a href="login.html" class="btn">Follow</a>`
-        }
+        <div class="profile-actions">
+          ${
+            isOwnProfile
+              ? `<button id="edit-profile-btn" class="btn btn-outline">Edit profile</button>`
+              : currentUser
+                ? `<button id="follow-btn" class="btn ${profile.isFollowing ? 'btn-follow-active' : ''}" data-username="${escapeHtml(profile.username)}">
+                     ${profile.isFollowing ? 'Following' : 'Follow'}
+                   </button>`
+                : `<a href="login.html" class="btn">Follow</a>`
+          }
+        </div>
       </div>
     </div>
   `;
